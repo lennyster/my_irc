@@ -30,7 +30,7 @@ io.on('connection', socket => {
 
     socket.on('chatmessage', message => {
         console.log(message);
-        socket.broadcast.emit('message',message)
+        socket.broadcast.emit('chatmessage',message)
     });
 
     //deconnection
