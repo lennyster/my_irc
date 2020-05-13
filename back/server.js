@@ -24,9 +24,20 @@ io.on('connection', socket => {
     console.log('Nouvelle connection');
     socket.emit('message','Connection recu');
 
-
     //envoi a tout le monde sauf socket
     socket.broadcast.emit('message','Quelqu\'un s\'est connecte')
+
+
+    socket.on('chatmessage', message => {
+        console.log(message);
+        socket.broadcast.emit('message',message)
+    });
+
+    //deconnection
+    socket.on('disconnect', () => {
+        io.emit('message','Quelqu\'un s\'est deconnecte')
+    });
+
 })
 
 io.on('testmessage', message => {
