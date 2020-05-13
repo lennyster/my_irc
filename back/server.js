@@ -1,7 +1,13 @@
 var express = require('express');
+var socketio = require('socketio');
 var app = express();
+
+var http = require('http').createServer(app);
+
 var morgan = require('morgan');
 app.use(morgan('dev'))
+
+const io = socketio(http);
 
 let options = {
     root: __dirname + '/views'
