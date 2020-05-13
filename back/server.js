@@ -23,8 +23,15 @@ app.get("/", (req, res, next) => {
 io.on('connection', socket => {
     console.log('Nouvelle connection');
     socket.emit('message','Connection recu');
+
+
+    //envoi a tout le monde sauf socket
+    socket.broadcast.emit('message','Quelqu\'un s\'est connecte')
 })
 
+io.on('testmessage', message => {
+    console.log(message);
+})
 
 let port = 4242; 
 http.listen(port, 
