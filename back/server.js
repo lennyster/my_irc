@@ -1,5 +1,5 @@
 var express = require('express');
-var socketio = require('socketio');
+var socketio = require('socket.io');
 var app = express();
 
 var http = require('http').createServer(app);
@@ -18,5 +18,13 @@ app.get("/", (req, res, next) => {
 
 })
 
+io.on('connection', socket => {
+    console.log('Nouvelle connection');
+    socket.emit('message','Connection recu');
+})
+
+
 let port = 4242; 
-app.listen(port, () => console.log("Server sur " + port))
+http.listen(port, 
+    () => console.log("Server sur " + port)
+)
