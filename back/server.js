@@ -1,12 +1,14 @@
 var express = require('express');
 var app = express();
+var morgan = require('morgan');
+app.use(morgan('dev'))
 
-app.use((req, res, next) => {
-    console.log(req.path);
-    next();
-})
-app.get("/:name", (req, res, next) => {
-    res.send("Hello "+ req.params.name)
+let options = {
+    root: __dirname + '/views'
+}
+
+app.get("/", (req, res, next) => {
+    res.sendFile("index.html", options)
 
 })
 
