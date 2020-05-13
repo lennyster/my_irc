@@ -13,7 +13,7 @@ $( document ).ready(function() {
         socket.emit('chatmessage', $("#message").val())
         chatmessages.push($("#message").val());
         chat();
-        
+        $("#message").val("");
     })
 
 
@@ -30,5 +30,3 @@ $( document ).ready(function() {
         })
     }
 });
-
-
