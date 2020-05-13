@@ -10,10 +10,10 @@ $( document ).ready(function() {
 
     $("#send").click(() => {
         console.log($("#message").val())
-
         socket.emit('chatmessage', $("#message").val())
         chatmessages.push($("#message").val());
         chat();
+        
     })
 
 
