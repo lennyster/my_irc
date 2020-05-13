@@ -20,17 +20,22 @@ app.get("/", (req, res, next) => {
 
 })
 
+let chatmessage = [];
+
+
 io.on('connection', socket => {
     console.log('Nouvelle connection');
     socket.emit('message','Connection recu');
-
+    socket.emit('previousmessages', chatmessage);
     //envoi a tout le monde sauf socket
     socket.broadcast.emit('message','Quelqu\'un s\'est connecte')
 
 
     socket.on('chatmessage', message => {
         console.log(message);
-        socket.broadcast.emit('chatmessage',message)
+        chatmessage.push(message);
+        socket.broadcast.emit('chatmessage',message);
+
     });
 
     //deconnection
