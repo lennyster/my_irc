@@ -10,16 +10,25 @@ $( document ).ready(function() {
 
     $("#send").click(() => {
         console.log($("#message").val())
+
         socket.emit('chatmessage', $("#message").val())
         chatmessages.push($("#message").val());
         chat();
-        $("#message").val("");
+        $("#message").val('');
     })
 
 
     socket.on('chatmessage', message => {
         console.log(message)
         chatmessages.push(message);
+        chat();
+    })
+
+
+    socket.on('previousmessages', message => {
+        console.log(message)
+
+        chatmessages = message;
         chat();
     })
 
@@ -30,3 +39,5 @@ $( document ).ready(function() {
         })
     }
 });
+
+
