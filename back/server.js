@@ -13,6 +13,8 @@ let options = {
     root: __dirname + '/views'
 }
 
+app.use(express.static(options.root))
+
 app.get("/", (req, res, next) => {
     res.sendFile("index.html", options)
 
