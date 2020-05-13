@@ -1,7 +1,6 @@
 var express = require('express');
 var socketio = require('socket.io');
 var app = express();
-
 var http = require('http').createServer(app);
 
 var morgan = require('morgan');
@@ -23,6 +22,9 @@ app.get("/", (req, res, next) => {
 io.on('connection', socket => {
     console.log('Nouvelle connection');
     socket.emit('message','Connection recu');
+    socket.on('disconnect', () => {
+        console.log("Déconnecté")
+    })
 })
 
 
