@@ -24,6 +24,7 @@ $( document ).ready(function() {
     })
 
     function chat(){
+        $("#chat").empty();
         chatmessages.map(e => {
             $("#chat").append('<li>'+e+'</li>')
         })
