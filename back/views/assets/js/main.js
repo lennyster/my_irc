@@ -13,13 +13,21 @@ $( document ).ready(function() {
 
         socket.emit('chatmessage', $("#message").val())
         chatmessages.push($("#message").val());
+        chat();
     })
 
 
     socket.on('chatmessage', message => {
         console.log(message)
         chatmessages.push(message);
+        chat();
     })
+
+    function chat(){
+        chatmessages.map(e => {
+            $("#chat").append('<li>'+e+'</li>')
+        })
+    }
 });
 
 
