@@ -1,5 +1,14 @@
 
 $( document ).ready(function() {
+
+    let inputUsername = document.body.querySelector("#modalUsername");
+    $("#start").click(function(e){
+        e.preventDefault();
+        if (inputUsername.value.length > 2) {
+            socket.emit('setUsername', inputUsername)
+        }
+    })
+
     var socket = io();
     console.log('cbob');
     console.log(1);
@@ -10,11 +19,10 @@ $( document ).ready(function() {
 
     $("#send").click(() => {
         console.log($("#message").val())
-
         socket.emit('chatmessage', $("#message").val())
         chatmessages.push($("#message").val());
         chat();
-        $("#message").val('');
+        $("#message").val("");
     })
 
 
@@ -40,4 +48,25 @@ $( document ).ready(function() {
     }
 });
 
+$(document).ready(function(){
+    $(".mask").addClass("active");
+  });
 
+
+
+
+  function closeModal(){
+    $(".mask").removeClass("active");
+  }
+  
+  // Call the closeModal function on the clicks/keyboard
+  
+  $(".close, .mask").on("click", function(){
+    closeModal();
+  });
+  
+  $(document).keyup(function(e) {
+    if (e.keyCode == 27) {
+      closeModal();
+    }
+  });
