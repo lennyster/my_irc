@@ -4,10 +4,14 @@ $( document ).ready(function() {
     let inputUsername = document.body.querySelector("#modalUsername");
     $("#start").click(function(e){
         e.preventDefault();
-        if (inputUsername.value.length > 2) {
+        inputUsername = $.trim(inputUsername)
+        if (inputUsername.length > 1) {
             socket.emit('setUsername', inputUsername)
+            closeModal();
         }
     })
+
+    // socket.on('accept', (_username) => )
 
     var socket = io();
     console.log('cbob');

@@ -9,6 +9,8 @@ app.use(morgan('dev'))
 
 const io = socketio(http);
 
+let Users = [];
+
 let options = {
     root: __dirname + '/views'
 }
@@ -61,7 +63,28 @@ let commandes = {
 
 
 io.on('connection', socket => {
-    console.log('Nouvelle connection');
+
+    console.log('Nouvelle connection: ' + socket.id);
+    // Traitement pour l'assignation d'un Username
+    socket.on('setUsername', (inputUsername) => {
+        let usernameAlreadyExists = false;
+        Users.map((username) => {
+            if (username == inputUsername) {
+                usernameAlreadyExists = true;
+            }
+        })
+
+        if (usernameAlreadyExists) {
+            console.log('Decline')
+            socket.emit('rejectUsername')
+        }
+        else {
+            console.log('Accept')
+            socket.emit('acceptUsername')
+            Users.push(inputUsername)
+        }
+
+    })
     socket.emit('message','Connection recu');
     socket.emit('previousmessages', chatmessage);
     //envoi a tout le monde sauf socket
@@ -95,6 +118,7 @@ io.on('connection', socket => {
     //deconnection
     socket.on('disconnect', () => {
         io.emit('message','Quelqu\'un s\'est deconnecte')
+        console.log("Déconnexion: "+ socket.id)
     });
 
 })
