@@ -81,6 +81,7 @@ io.on('connection', socket => {
             socket.emit('rejectUsername', inputUsername)
         }
         else {
+            console.log(inputUsername)
             console.log('Accept')
             socket.join('users', () => {
                 socket.emit('acceptUsername', inputUsername, Usernames())
