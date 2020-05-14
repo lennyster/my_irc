@@ -11,6 +11,8 @@ const io = socketio(http);
 
 let Users = [];
 
+let username;
+
 let options = {
     root: __dirname + '/views'
 }
@@ -63,27 +65,29 @@ let commandes = {
 
 
 io.on('connection', socket => {
-
+    //socket.broadcast.emit('chatmessage','Quelqu\'un s\'est connecte')
     console.log('Nouvelle connection: ' + socket.id);
     // Traitement pour l'assignation d'un Username
     socket.on('setUsername', (inputUsername) => {
         let usernameAlreadyExists = false;
-        Users.map((username) => {
-            if (username == inputUsername) {
+        for(let socketid in Users){
+            if (Users[socketid] == inputUsername) {
                 usernameAlreadyExists = true;
             }
-        })
+        }
 
         if (usernameAlreadyExists) {
             console.log('Decline')
-            socket.emit('rejectUsername')
+            socket.emit('rejectUsername', inputUsername)
         }
         else {
             console.log('Accept')
-            socket.emit('acceptUsername')
-            Users.push(inputUsername)
+            socket.join('users', () => {
+                socket.emit('acceptUsername', inputUsername, Usernames())
+                Users[socket.id] = inputUsername; 
+                //socket.broadcast.emit('chatmessage','Quelqu\'un s\'est connecte')
+            })
         }
-
     })
     socket.emit('message','Connection recu');
     socket.emit('previousmessages', chatmessage);
@@ -115,10 +119,19 @@ io.on('connection', socket => {
         }
     });
 
+socket.on('edit', () => {
+
+})
+
     //deconnection
     socket.on('disconnect', () => {
         io.emit('message','Quelqu\'un s\'est deconnecte')
         console.log("Déconnexion: "+ socket.id)
+        if (Users[socket.id]) {
+            console.log(Users[socket.id] + ", bye !")
+            delete Users[socket.id]
+
+        }
     });
 
 })
@@ -131,3 +144,17 @@ let port = 4242;
 http.listen(port, 
     () => console.log("Server sur " + port)
 )
+
+// Renvoie username sans index
+
+function Usernames(){
+    let usernames = [];
+    for(let socketid in Users){
+        usernames.push(Users[socketid])
+    }
+    return usernames;
+}
+
+function UpdateUsers(users){
+      
+}

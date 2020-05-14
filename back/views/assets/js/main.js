@@ -1,17 +1,28 @@
 
 $( document ).ready(function() {
 
-    let inputUsername = document.body.querySelector("#modalUsername");
+
     $("#start").click(function(e){
         e.preventDefault();
+        let inputUsername = $("#modalUsername").val(),
+            username,
+            allUsers
         inputUsername = $.trim(inputUsername)
         if (inputUsername.length > 1) {
             socket.emit('setUsername', inputUsername)
-            closeModal();
+            socket.on('acceptUsername', (_username, _allUsers) => {
+                allUsers = _allUsers;
+                console.log(allUsers);
+                username = _username;
+                closeModal();
+            })
+            socket.on('rejectUsername', (_username) => {
+                $("#modalUsername").val("");
+                $("#modalUsername").attr('placeholder', "Username already taken")
+            })
         }
     })
 
-    // socket.on('accept', (_username) => )
 
     var socket = io();
     console.log('cbob');
