@@ -78,6 +78,7 @@ io.on('connection', socket => {
             let key = tab[0];
             if(commandes[key] === undefined){
                 console.log('je ne connais pas cette commande');
+                socket.emit('chatmessage','SERVER : je ne connais pas cette commande')
             } else {
                 console.log('commande reconnu')
                 tab.shift();
