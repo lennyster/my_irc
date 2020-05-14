@@ -29,7 +29,22 @@ let chatmessage = [];
 
 let commandes = {
     nick : function (value,tab,socket){
-        console.log('Change son pseudo en '+value);
+        let usernameAlreadyExists = false;
+        for(let socketid in Users){
+            if (Users[socketid] == value) {
+                usernameAlreadyExists = true;
+            }
+        }
+        if(usernameAlreadyExists === true){
+            socket.emit('server','SERVER : le pseudo "'+value+'" est deja prit');
+
+        } else {
+            let previous = Users[socket.id];
+            Users[socket.id] = value;
+            console.log(Users[socket.id])
+            console.log('Change son pseudo en '+value);
+            socket.broadcast.emit('server','SERVER : '+previous+ ' change son pseudo en '+Users[socket.id])
+        }
     },
     list : function (value,tab,socket){
         console.log('Check les channel contenant '+value);
@@ -47,7 +62,11 @@ let commandes = {
         console.log('Quitte le channel '+value);
     },
     users : function (value,tab,socket){
-        console.log('Liste les utilisateurs '+value);
+        let array = [];
+        for(let x in Users){
+            array.push(Users[x]);
+        }
+        socket.emit('server',array);
     },
     msg : function (value,tab,socket){
         let tab2 = tab;
@@ -87,13 +106,13 @@ io.on('connection', socket => {
                 socket.emit('acceptUsername', inputUsername, Usernames())
                 Users[socket.id] = inputUsername; 
                 //socket.broadcast.emit('chatmessage','Quelqu\'un s\'est connecte')
+                socket.broadcast.emit('server','SERVER :'+Users[socket.id] + ' s\'est connecte')
             })
         }
     })
     socket.emit('message','Connection recu');
     socket.emit('previousmessages', chatmessage);
     //envoi a tout le monde sauf socket
-    socket.broadcast.emit('chatmessage','Quelqu\'un s\'est connecte')
 
 
     socket.on('chatmessage', message => {
@@ -106,7 +125,7 @@ io.on('connection', socket => {
             let key = tab[0];
             if(commandes[key] === undefined){
                 console.log('je ne connais pas cette commande');
-                socket.emit('chatmessage','SERVER : je ne connais pas cette commande')
+                socket.emit('server','SERVER : je ne connais pas cette commande')
             } else {
                 console.log('commande reconnu')
                 tab.shift();
@@ -116,7 +135,7 @@ io.on('connection', socket => {
             }
         } else {
             chatmessage.push(message);
-            socket.broadcast.emit('chatmessage',message);
+            socket.broadcast.emit('chatmessage',Users[socket.id]+': '+message);
         }
     });
 

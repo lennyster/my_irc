@@ -46,7 +46,11 @@ $( document ).ready(function() {
         chatmessages.push(message);
         chat();
     })
-
+    socket.on('server', message => {
+        console.log(message)
+        chatmessages.push(message);
+        chat();
+    })
 
     socket.on('previousmessages', message => {
         console.log(message)
