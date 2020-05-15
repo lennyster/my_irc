@@ -40,6 +40,18 @@ $( document ).ready(function() {
         $("#message").val("");
     })
 
+    $('#message').on("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            console.log($("#message").val())
+            socket.emit('chatmessage', $("#message").val())
+            chatmessages.push($("#message").val());
+            chat();
+            $("#message").val("");
+            $('#message').focus();
+        }
+    });
+
 
     socket.on('chatmessage', message => {
         console.log(message)
