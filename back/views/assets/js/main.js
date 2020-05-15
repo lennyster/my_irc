@@ -33,22 +33,27 @@ $( document ).ready(function() {
     let chatmessages = [];
 
     $("#send").click(() => {
-        console.log($("#message").val())
-        socket.emit('chatmessage', $("#message").val())
-        chatmessages.push($("#message").val());
-        chat();
-        $("#message").val("");
-    })
-
-    $('#message').on("keyup", function(event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
+        if($("#message").val() !== ''){
             console.log($("#message").val())
             socket.emit('chatmessage', $("#message").val())
             chatmessages.push($("#message").val());
             chat();
             $("#message").val("");
             $('#message').focus();
+        }
+    })
+
+    $('#message').on("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            if($("#message").val() !== ''){
+                console.log($("#message").val())
+                socket.emit('chatmessage', $("#message").val())
+                chatmessages.push($("#message").val());
+                chat();
+                $("#message").val("");
+                $('#message').focus();
+            }
         }
     });
 
