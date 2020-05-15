@@ -113,7 +113,7 @@ io.on('connection', socket => {
     socket.emit('message','Connection recu');
     socket.emit('previousmessages', chatmessage);
     //envoi a tout le monde sauf socket
-
+    //dawhihdawio
 
     socket.on('chatmessage', message => {
         // LES COMMANDES
