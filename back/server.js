@@ -134,7 +134,7 @@ io.on('connection', socket => {
 
             }
         } else {
-            chatmessage.push(message);
+            chatmessage.push(Users[socket.id]+': '+message);
             socket.broadcast.emit('chatmessage',Users[socket.id]+': '+message);
         }
     });
