@@ -78,8 +78,7 @@ $( document ).ready(function() {
 
     socket.on('privatemsg', message => {
         console.log(message)
-
-        chatmessages = message;
+        chatmessages.push(message);
         chat();
     })
 
