@@ -73,6 +73,18 @@ let commandes = {
         let pseudo = tab2[0];
         tab.shift();
         let msg = tab.join(' ');
+        let id = null;
+        for(let x in Users){
+            if(Users[x] === pseudo){
+                id = x;
+            }
+        }
+        if(id === null){
+            socket.emit('server','SERVER : le pseudo "'+pseudo+'" n\'existe pas');
+        } else {
+            console.log(id);
+            io.to(id).emit('privatemsg', 'FROM : '+Users[socket.id]+'\t'+msg);
+        }
         console.log('Envoi un message a '+pseudo+' Contenant ce message: '+msg);
     },
 };

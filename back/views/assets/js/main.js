@@ -76,6 +76,13 @@ $( document ).ready(function() {
         chat();
     })
 
+    socket.on('privatemsg', message => {
+        console.log(message)
+
+        chatmessages = message;
+        chat();
+    })
+
     function chat(){
         $("#chat").empty();
         chatmessages.map(e => {
