@@ -50,17 +50,37 @@ let commandes = {
         console.log('Check les channel contenant '+value);
     },
     create : function (value,tab,socket){
-
+        let created = false;
         let room = tab.join(' ');
-        socket.join(room);
+        for(x in rooms){
+            if(x == room){
+                created = true;
+            }
+        }
 
-        rooms.push(room);
-        // io.sockets.manager.roomClients[socket.id]
-        io.emit('server','SERVER : '+Users[socket.id]+ ' creer le channel '+room);
+        if(!created){
+            let lastroom;
+            for(x in socket.rooms){
+                if(x !== socket.id){
+                    lastroom = x;
+                }
+            }
+            console.log(lastroom,socket.rooms);
+            
+            socket.join(room);
+            socket.leave(lastroom);
+            rooms[room] = { owner: socket.id, createdat : Date.now(), users : []};
+            rooms[room].users.push(Users[socket.id]);
+            // io.sockets.manager.roomClients[socket.id]
+            io.emit('server','SERVER : '+Users[socket.id]+ ' creer le channel '+room);
+            console.log(rooms);
 
 
 
-        console.log('Creer un channel s\'appelant '+value);
+            console.log('Creer un channel s\'appelant '+value);
+        } else {
+            socket.emit('server','SERVER : le channel "'+value+'" est deja prit');
+        }
     },
     delete : function (value,tab,socket){
         console.log('supprime le channel s\'appelant '+value);
@@ -157,7 +177,15 @@ io.on('connection', socket => {
             }
         } else {
             chatmessage.push(Users[socket.id]+': '+message);
-            socket.broadcast.emit('chatmessage',Users[socket.id]+': '+message);
+            let currentroom;
+            for(x in socket.rooms){
+                if(x !== socket.id){
+                    currentroom = x;
+                }
+            }
+            console.log(currentroom);
+            socket.broadcast.to(currentroom).emit('chatmessage',Users[socket.id]+': '+message);
+            // socket.broadcast.emit('chatmessage',Users[socket.id]+': '+message);
         }
     });
 
