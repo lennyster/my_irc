@@ -1,12 +1,30 @@
 
 $( document ).ready(function() {
+    
+    $(".mask").addClass("active");
+        
 
 
     $("#start").click(function(e){
         e.preventDefault();
+        testname();
+    })
+
+    $(document).on("keyup", function(e) {
+        if($('.mask').hasClass('active') && event.keyCode === 13){
+            e.preventDefault();
+            testname();
+        }
+    });
+
+
+    
+
+
+    function testname(){
         let inputUsername = $("#modalUsername").val(),
-            username,
-            allUsers
+        username,
+        allUsers
         inputUsername = $.trim(inputUsername)
         if (inputUsername.length > 1) {
             socket.emit('setUsername', inputUsername)
@@ -21,18 +39,16 @@ $( document ).ready(function() {
                 $("#modalUsername").attr('placeholder', "Username already taken")
             })
         }
-    })
-
+    }
 
     var socket = io();
     console.log('cbob');
     console.log(1);
     socket.on('message', message => {console.log(message)})
-
-
     let chatmessages = [];
 
     $("#send").click(() => {
+        console.log(test);
         if($("#message").val() !== ''){
             console.log($("#message").val())
             socket.emit('chatmessage', $("#message").val())
@@ -90,9 +106,9 @@ $( document ).ready(function() {
     }
 });
 
-$(document).ready(function(){
-    $(".mask").addClass("active");
-  });
+
+
+    
 
 
 

@@ -25,7 +25,7 @@ app.get("/", (req, res, next) => {
 })
 
 let chatmessage = [];
-
+let rooms = [];
 
 let commandes = {
     nick : function (value,tab,socket){
@@ -50,6 +50,16 @@ let commandes = {
         console.log('Check les channel contenant '+value);
     },
     create : function (value,tab,socket){
+
+        let room = tab.join(' ');
+        socket.join(room);
+
+        rooms.push(room);
+        // io.sockets.manager.roomClients[socket.id]
+        io.emit('server','SERVER : '+Users[socket.id]+ ' creer le channel '+room);
+
+
+
         console.log('Creer un channel s\'appelant '+value);
     },
     delete : function (value,tab,socket){
@@ -157,7 +167,7 @@ socket.on('edit', () => {
 
     //deconnection
     socket.on('disconnect', () => {
-        io.emit('message','Quelqu\'un s\'est deconnecte')
+        socket.broadcast.emit('server','SERVER : '+Users[socket.id] + ' s\'est deconnecte')
         console.log("Déconnexion: "+ socket.id)
         if (Users[socket.id]) {
             console.log(Users[socket.id] + ", bye !")
