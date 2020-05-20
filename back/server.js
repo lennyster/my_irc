@@ -21,8 +21,9 @@ app.use(express.static(options.root))
 
 app.get("/", (req, res, next) => {
     res.sendFile("index.html", options)
-
 })
+
+
 
 let chatmessage = [];
 
