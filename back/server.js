@@ -48,8 +48,12 @@ let commandes = {
         }
     },
     list : function (value,tab,socket){
+        let array = [];
+        for(let x in rooms){
+            array.push(x);
+        }
+        socket.emit('server','SERVER : les channels disponibles sont : '+ array);
         console.log('Check les channel contenant '+value);
-        console.log(rooms);
     },
     create : function (value,tab,socket){
         let created = false;
