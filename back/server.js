@@ -26,7 +26,7 @@ app.get("/", (req, res, next) => {
 
 let chatmessage = [];
 let rooms = [];
-rooms['users'] = { owner: null, createdat : Date.now(), users : []};
+rooms['users'] = { owner: null, createdat : Date.now(), users : [],messages : []};
 
 let commandes = {
     nick : function (value,tab,socket){
@@ -37,7 +37,8 @@ let commandes = {
             }
         }
         if(usernameAlreadyExists === true){
-            socket.emit('server','SERVER : le pseudo "'+value+'" est deja prit');
+            let msg = 'le pseudo "'+value+'" est deja prit';
+            socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'})
 
         } else {
             let previous = Users[socket.id];
@@ -304,7 +305,8 @@ io.on('connection', socket => {
                 }
             }
             console.log(currentroom);
-            socket.broadcast.to(currentroom).emit('chatmessage',Users[socket.id]+': '+message);
+            // socket.broadcast.to(currentroom).emit('chatmessage',Users[socket.id]+': '+message);
+            socket.broadcast.to(currentroom).emit('chatmessage',{from: Users[socket.id], currentchannel: currentroom, message: message, type: 'public'})
             // socket.broadcast.emit('chatmessage',Users[socket.id]+': '+message);
         }
     });
