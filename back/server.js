@@ -80,8 +80,6 @@ let commandes = {
             io.emit('server','SERVER : '+Users[socket.id]+ ' creer le channel '+room);
             console.log(rooms);
 
-
-
             console.log('Creer un channel s\'appelant '+value);
         } else {
             socket.emit('server','SERVER : le channel "'+value+'" est deja prit');
