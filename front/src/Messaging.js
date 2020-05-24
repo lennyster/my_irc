@@ -15,8 +15,8 @@ class Messaging extends Component {
         message: null,
         chat: [],
         owner: [],
-        gitan: null
-      };
+        channel: [],
+    };
 
     // componentDidMount(){
     // }
@@ -48,7 +48,7 @@ class Messaging extends Component {
 				<li class="contact">
 					<div class="wrap">
 						<div class="meta">
-							<p class="name">Rachel Zane</p>
+							<p class="name channel">Rachel Zane</p>
 						</div>
 					</div>
 				</li>
@@ -89,6 +89,8 @@ class Messaging extends Component {
         </Fragment>
         )
     }
+
+    
 
 
     handleChange = e => {
@@ -156,22 +158,39 @@ class Messaging extends Component {
         }
     }
 
-    componentDidMount()
-    {
+    getmessages = async () => {
         socket.on('chatmessage', message => {
             console.log(message)
-            this.state.chat.push(message.message)
-            this.state.owner.push(message.from)
+            let array = this.state.chat
+            array.push(message.message)
+            let array2 = this.state.owner
+            array2.push(message.from)
+            this.setState({ chat : array, owner : array2});
+            // this.state.chat.push(message.message)
+            // this.state.owner.push(message.from)
         })
     }
 
-    componentWillUnmount()
+    getChannels = async () => {
+        
+    }
+
+
+    componentDidMount()
     {
-        socket.on('chatmessage', message => {
-            console.log(message)
-            this.state.chat.push(message.message)
-            this.state.owner.push(message.from)
-        })
+        this.getmessages();
+    }
+
+    // componentWillUnmount()
+    // {
+    //     socket.on('chatmessage', message => {
+    //         console.log(message)
+    //         this.state.chat.push(message.message)
+    //         this.state.owner.push(message.from)
+    //     })
+    // }
+    listChanel = e => () {
+        
     }
 
     render(){

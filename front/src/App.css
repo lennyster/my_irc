@@ -711,7 +711,7 @@ body {
   outline: none;
 }
 
-.name {
+.name, .channel {
   display: flex;
   justify-content: center;
   align-items: center;
