@@ -46,7 +46,10 @@ let commandes = {
             Users[socket.id] = value;
             console.log(Users[socket.id])
             console.log('Change son pseudo en '+value);
-            socket.broadcast.emit('server','SERVER : '+previous+ ' change son pseudo en '+Users[socket.id])
+            let msg = previous+ ' change son pseudo en '+Users[socket.id]
+            // socket.broadcast.emit('server','SERVER : '+previous+ ' change son pseudo en '+Users[socket.id])
+            socket.broadcast.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'public'})
+
         }
     },
     list : function (value,tab,socket){
@@ -54,7 +57,10 @@ let commandes = {
         for(let x in rooms){
             array.push(x);
         }
-        socket.emit('server','SERVER : les channels disponibles sont : '+ array);
+        // socket.emit('server','SERVER : les channels disponibles sont : '+ array);
+        let msg = 'les channels disponibles sont : '+ array;
+        socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'})
+
         console.log('Check les channel contenant '+value);
     },
     create : function (value,tab,socket){
@@ -82,12 +88,18 @@ let commandes = {
             removeA(rooms[lastroom].users, Users[socket.id]);
 
             // io.sockets.manager.roomClients[socket.id]
-            io.emit('server','SERVER : '+Users[socket.id]+ ' creer le channel '+room);
+            // io.emit('server','SERVER : '+Users[socket.id]+ ' creer le channel '+room);
+            let msg = Users[socket.id]+ ' creer le channel '+room;
+            io.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'public'});
+
             console.log(rooms);
 
             console.log('Creer un channel s\'appelant '+value);
         } else {
-            socket.emit('server','SERVER : le channel "'+value+'" est deja prit');
+            // socket.emit('server','SERVER : le channel "'+value+'" est deja prit');
+            let msg = 'le channel "'+value+'" est deja prit';
+            socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'});
+
         }
     },
     delete : function (value,tab,socket){
@@ -113,19 +125,31 @@ let commandes = {
                 var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
                 client_socket.leave(lastroom);
                 client_socket.join('users');
-                client_socket.emit('server','SERVER : vous avez ete reconnecte au channel users');
+                // client_socket.emit('server','SERVER : vous avez ete reconnecte au channel users');
+                let msg = 'vous avez ete reconnecte au channel users';
+                client_socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'});
+
                 rooms['users'].users.push(Users[client_socket.id]);
                 }
                 delete rooms[lastroom];
                 // let test = rooms.splice(lastroom,1);
-                io.emit('server','SERVER : '+Users[socket.id]+ ' delete le channel '+room);
+                // io.emit('server','SERVER : '+Users[socket.id]+ ' delete le channel '+room);
+                msg = Users[socket.id]+ ' delete le channel '+room;
+                io.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'public'});
+
 
                 console.log('Delete le channel '+value);
             } else {
-                socket.emit('server','SERVER : le channel "'+value+'" ne vous appartient pas !');
+                // socket.emit('server','SERVER : le channel "'+value+'" ne vous appartient pas !');
+                let msg = 'le channel "'+value+'" ne vous appartient pas !';
+                socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'});
+
             }
         } else {
-            socket.emit('server','SERVER : le channel "'+value+'" n\'existe pas');
+            // socket.emit('server','SERVER : le channel "'+value+'" n\'existe pas');
+            let msg = 'le channel "'+value+'" n\'existe pas'
+            socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'});
+
         }
     },
     join : function (value,tab,socket){
@@ -151,16 +175,24 @@ let commandes = {
             removeA(rooms[lastroom].users, Users[socket.id]);
             rooms[room].users.push(Users[socket.id]);
             // io.sockets.manager.roomClients[socket.id]
-            io.emit('server','SERVER : '+Users[socket.id]+ ' rejoint le channel '+room);
+            // io.emit('server','SERVER : '+Users[socket.id]+ ' rejoint le channel '+room);
+            let msg = Users[socket.id]+ ' rejoint le channel '+room;
+            io.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'public'});
+
             console.log(rooms);
-            socket.broadcast.to(room).emit('server','SERVER : '+Users[socket.id]+ ' vient de rejoindre le channel !');
+            // socket.broadcast.to(room).emit('server','SERVER : '+Users[socket.id]+ ' vient de rejoindre le channel !');
+            msg = Users[socket.id]+ ' vient de rejoindre le channel !';
+            socket.broadcast.to(room).emit('chatmessage',{from: 'server', currentchannel: room, message: msg, type: 'public'});
 
 
 
             // console.log('Creer un channel s\'appelant '+value);
             console.log('Rejoint le channel '+value);
         } else {
-            socket.emit('server','SERVER : le channel "'+value+'" n\'existe pas');
+            // socket.emit('server','SERVER : le channel "'+value+'" n\'existe pas');
+            let msg = 'le channel "'+value+'" n\'existe pas';
+            socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'});
+
         }
     },
     part : function (value,tab,socket){
@@ -183,15 +215,28 @@ let commandes = {
                 
                 socket.leave(lastroom);
                 socket.join('users');
-                socket.emit('server','SERVER : vous avez ete reconnecte au channel users');
+                // socket.emit('server','SERVER : vous avez ete reconnecte au channel users');
+                let msg = 'vous avez ete reconnecte au channel users';
+                socket.emit('chatmessage',{from: 'server', currentchannel: 'users', message: msg, type: 'private'});
                 removeA(rooms[lastroom].users, Users[socket.id]);
                 rooms['users'].users.push(Users[socket.id]);
-                socket.broadcast.to(lastroom).emit('server','SERVER : '+Users[socket.id]+ ' vient de quitter le channel !');
-                socket.broadcast.to('users').emit('server','SERVER : '+Users[socket.id]+ ' vient de rejoindre le channel !');
+
+
+                // socket.broadcast.to(lastroom).emit('server','SERVER : '+Users[socket.id]+ ' vient de quitter le channel !');
+                msg = Users[socket.id]+ ' vient de quitter le channel !';
+                socket.broadcast.to(lastroom).emit('chatmessage',{from: 'server', currentchannel: lastroom, message: msg, type: 'public'});
+
+
+                // socket.broadcast.to('users').emit('server','SERVER : '+Users[socket.id]+ ' vient de rejoindre le channel !');
+                msg = Users[socket.id]+ ' vient de rejoindre le channel !';
+                socket.broadcast.to('users').emit('chatmessage',{from: 'server', currentchannel: 'users', message: msg, type: 'public'});
 
             
         } else {
-            socket.emit('server','SERVER : le channel "'+value+'" n\'existe pas');
+            // socket.emit('server','SERVER : le channel "'+value+'" n\'existe pas');
+            let msg = 'le channel "'+value+'" n\'existe pas';
+            socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'});
+
         }
     },
     users : function (value,tab,socket){
@@ -205,7 +250,10 @@ let commandes = {
         for(let x in rooms[lastroom].users){
             array.push(rooms[lastroom].users[x]);
         }
-        socket.emit('server','SERVER : les personnes connectes sont : '+ array);
+        // socket.emit('server','SERVER : les personnes connectes sont : '+ array);
+        let msg = 'les personnes connectes sont : '+ array;
+        socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'});
+
     },
     msg : function (value,tab,socket){
         let tab2 = tab;
@@ -220,9 +268,14 @@ let commandes = {
         }
         if(id === null){
             socket.emit('server','SERVER : le pseudo "'+pseudo+'" n\'existe pas');
+            let msg2 = 'le pseudo "'+pseudo+'" n\'existe pas';
+            socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg2, type: 'private'});
+
         } else {
             console.log(id);
-            io.to(id).emit('privatemsg', 'FROM : '+Users[socket.id]+'\t'+msg);
+            // io.to(id).emit('privatemsg', 'FROM : '+Users[socket.id]+'\t'+msg);
+
+            io.to(id).emit('chatmessage',{from: Users[socket.id], currentchannel: null, message: msg, type: 'private'});
         }
         console.log('Envoi un message a '+pseudo+' Contenant ce message: '+msg);
     },
@@ -266,7 +319,10 @@ io.on('connection', socket => {
                 socket.emit('acceptUsername', inputUsername, Usernames())
                 Users[socket.id] = inputUsername; 
                 //socket.broadcast.emit('chatmessage','Quelqu\'un s\'est connecte')
-                socket.broadcast.emit('server','SERVER :'+Users[socket.id] + ' s\'est connecte')
+                // socket.broadcast.emit('server','SERVER :'+Users[socket.id] + ' s\'est connecte')
+                let msg = Users[socket.id] + ' s\'est connecte';
+                socket.broadcast.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'public'});
+
                 rooms['users'].users.push(Users[socket.id]);
             })
 
@@ -287,7 +343,9 @@ io.on('connection', socket => {
             let key = tab[0];
             if(commandes[key] === undefined){
                 console.log('je ne connais pas cette commande');
-                socket.emit('server','SERVER : je ne connais pas cette commande')
+                // socket.emit('server','SERVER : je ne connais pas cette commande')
+                let msg = 'je ne connais pas cette commande';
+                socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'});
             } else {
                 console.log('commande reconnu')
                 tab.shift();
@@ -317,7 +375,9 @@ socket.on('edit', () => {
 
     //deconnection
     socket.on('disconnect', () => {
-        socket.broadcast.emit('server','SERVER : '+Users[socket.id] + ' s\'est deconnecte')
+        // socket.broadcast.emit('server','SERVER : '+Users[socket.id] + ' s\'est deconnecte')
+        let msg = Users[socket.id] + ' s\'est deconnecte';
+        socket.broadcast.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'public'});
         console.log("Déconnexion: "+ socket.id)
         if (Users[socket.id]) {
             console.log(Users[socket.id] + ", bye !")
