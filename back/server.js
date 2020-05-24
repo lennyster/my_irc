@@ -77,7 +77,7 @@ let commandes = {
             
             socket.join(room);
             socket.leave(lastroom);
-            rooms[room] = { owner: socket.id, createdat : Date.now(), users : []};
+            rooms[room] = { owner: socket.id, createdat : Date.now(), users : [], messages : []};
             rooms[room].users.push(Users[socket.id]);
             removeA(rooms[lastroom].users, Users[socket.id]);
 
@@ -305,6 +305,7 @@ io.on('connection', socket => {
             }
             console.log(currentroom);
             // socket.broadcast.to(currentroom).emit('chatmessage',Users[socket.id]+': '+message);
+            rooms[currentroom].messages.push({from: Users[socket.id], message : message});
             socket.broadcast.to(currentroom).emit('chatmessage',{from: Users[socket.id], currentchannel: currentroom, message: message, type: 'public'})
             // socket.broadcast.emit('chatmessage',Users[socket.id]+': '+message);
         }
