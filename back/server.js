@@ -59,7 +59,7 @@ let commandes = {
         }
         // socket.emit('server','SERVER : les channels disponibles sont : '+ array);
         let msg = 'les channels disponibles sont : '+ array;
-        socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private'})
+        socket.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'private', content : array});
 
         console.log('Check les channel contenant '+value);
     },

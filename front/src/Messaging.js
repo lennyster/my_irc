@@ -156,22 +156,24 @@ class Messaging extends Component {
         }
     }
 
+
+	getmessages = async () => {
+		socket.on('chatmessage', message => {
+			console.log(message)
+			let array = this.state.chat
+			array.push(message.message)
+			let array2 = this.state.chat
+			array2.push(message.from)
+			this.setState({ chat : array, owner : array2});
+            // this.state.chat.push(message.message)
+            // this.state.owner.push(message.from)
+        })
+	}
+
+
     componentDidMount()
     {
-        socket.on('chatmessage', message => {
-            console.log(message)
-            this.state.chat.push(message.message)
-            this.state.owner.push(message.from)
-        })
-    }
-
-    componentWillUnmount()
-    {
-        socket.on('chatmessage', message => {
-            console.log(message)
-            this.state.chat.push(message.message)
-            this.state.owner.push(message.from)
-        })
+		this.getmessages();
     }
 
     render(){
