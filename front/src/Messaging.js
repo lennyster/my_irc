@@ -158,6 +158,7 @@ class Messaging extends Component {
         }
     }
 
+<<<<<<< HEAD
     getmessages = async () => {
         socket.on('chatmessage', message => {
             console.log(message)
@@ -166,11 +167,23 @@ class Messaging extends Component {
             let array2 = this.state.owner
             array2.push(message.from)
             this.setState({ chat : array, owner : array2});
+=======
+
+	getmessages = async () => {
+		socket.on('chatmessage', message => {
+			console.log(message)
+			let array = this.state.chat
+			array.push(message.message)
+			let array2 = this.state.chat
+			array2.push(message.from)
+			this.setState({ chat : array, owner : array2});
+>>>>>>> e15ae044693a9d1641fda34dbe4a2ddd4e614740
             // this.state.chat.push(message.message)
             // this.state.owner.push(message.from)
         })
-    }
+	}
 
+<<<<<<< HEAD
     getChannels = async () => {
         
     }
@@ -191,6 +204,12 @@ class Messaging extends Component {
     // }
     listChanel = e => () {
         
+=======
+
+    componentDidMount()
+    {
+		this.getmessages();
+>>>>>>> e15ae044693a9d1641fda34dbe4a2ddd4e614740
     }
 
     render(){
