@@ -710,3 +710,21 @@ body {
 #frame .content .message-input .wrap button:focus {
   outline: none;
 }
+
+.name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex-direction: column;
+}
+
+.name input {
+  height: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.float {
+  float: right;
+}

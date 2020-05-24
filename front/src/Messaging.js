@@ -1,17 +1,33 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment,  useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import $ from 'jquery';
+import $ from 'jquery'
+import io from 'socket.io-client';
+const ENDPOINT = 'http://localhost:4242';
+const socket = io(ENDPOINT);
 
 
 class Messaging extends Component {
-    render(){
+    
+    state = {
+        show: false,
+        name: null,
+        message: null,
+        chat: [],
+        owner: [],
+        gitan: null
+      };
+
+    // componentDidMount(){
+    // }
+
+    messaging(){
         return(
-            <div id="frame">
-	<div id="sidepanel">
+    <Fragment>
+    <div id="sidepanel">
 		<div id="profile">
 			<div class="wrap">
-				<p>Mike Ross</p>
+				<p>{this.state.name}</p>
 				<i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
 				<div id="expanded">
 					<label for="twitter"><i class="fa fa-facebook fa-fw" aria-hidden="true"></i></label>
@@ -33,7 +49,6 @@ class Messaging extends Component {
 					<div class="wrap">
 						<div class="meta">
 							<p class="name">Rachel Zane</p>
-							<p class="preview">I was thinking that we could have chicken tonight, sounds good?</p>
 						</div>
 					</div>
 				</li>
@@ -52,17 +67,124 @@ class Messaging extends Component {
 		</div>
 		<div class="messages">
 			<ul>
+                {this.state.chat.map(e => {
+                    return(
+                    <li class="replies">
+                        <p>{e}</p>
+                    </li>
+                    )
+                })
+                }
+                
 			</ul>
 		</div>
 		<div class="message-input">
 			<div class="wrap">
-			<input type="text" placeholder="Write your message..." />
+			<input type="text" id="message" onChange={this.handleChangeMessage} name="message" placeholder="Write your message..." />
 			<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-			<button class="submit">Send</button>
+			<button onClick={this.handleClickMessage} class="submit">Send</button>
 			</div>
 		</div>
-	</div>
-</div> 
+        </div>
+        </Fragment>
+        )
+    }
+
+
+    handleChange = e => {
+        this.setState({
+          [e.target.name]: e.target.value,
+        });
+     
+    };
+
+    handleClick = e => {
+        let inputUsername = this.state.name,
+        username,
+        allUsers
+        inputUsername = $.trim(inputUsername)
+        if (inputUsername.length > 1) {
+            socket.emit('setUsername', inputUsername)
+            socket.on('acceptUsername', (_username, _allUsers) => {
+                allUsers = _allUsers;
+                username = _username;
+                this.setState({
+                    show: true,
+                  });
+            })
+            socket.on('rejectUsername', (_username) => {
+                this.setState({
+                    name: "",
+                  });;
+                  $("#pseudo").val("")
+                  $("#pseudo").attr('placeholder', "Username already taken")
+            })
+        }
+    }
+    
+    handleChangeMessage = e => {
+        this.setState({
+            message: e.target.value,
+          });
+    }
+
+    // chat = e => {
+    //     this.state.chat.map(e => {
+    //         <li class="replies">
+    //             <p>{e}</p>
+	// 		</li>
+    //     })
+    // }
+
+
+
+    handleClickMessage = e => {
+        if(this.state.message !== ''){
+            socket.emit('chatmessage', this.state.message)
+            this.setState({
+                message: "",
+              });
+
+            let array = this.state.chat
+            array.push(this.state.message)
+            console.log(array);
+            this.setState({chat: array})
+            $("#message").val("")
+            this.setState({
+                gitan:null
+            })
+        }
+    }
+
+    componentDidMount()
+    {
+        socket.on('chatmessage', message => {
+            console.log(message)
+            this.state.chat.push(message.message)
+            this.state.owner.push(message.from)
+        })
+    }
+
+    componentWillUnmount()
+    {
+        socket.on('chatmessage', message => {
+            console.log(message)
+            this.state.chat.push(message.message)
+            this.state.owner.push(message.from)
+        })
+    }
+
+    render(){
+        return(
+            <div id="frame">
+                { 
+                    this.state.show ? this.messaging() : <div className="name">
+                    <h1>Psuedo</h1>
+                    <input id="pseudo"onChange={this.handleChange} name="name"></input>
+                    <button onClick={this.handleClick}>Enter</button>
+                    </div>
+                } 
+            </div> 
 
 
         )
