@@ -31,30 +31,9 @@ class Messaging extends Component {
 			<ul>
 				<li class="contact">
 					<div class="wrap">
-						<span class="contact-status away"></span>
 						<div class="meta">
 							<p class="name">Rachel Zane</p>
 							<p class="preview">I was thinking that we could have chicken tonight, sounds good?</p>
-						</div>
-					</div>
-				</li>
-				<li class="contact">
-					<div class="wrap">
-						<span class="contact-status"></span>
-						<img src="http://emilcarlsson.se/assets/danielhardman.png" alt="" />
-						<div class="meta">
-							<p class="name">Daniel Hardman</p>
-							<p class="preview">We'll meet again, Mike. Tell Jessica I said 'Hi'.</p>
-						</div>
-					</div>
-				</li>
-				<li class="contact">
-					<div class="wrap">
-						<span class="contact-status"></span>
-						<img src="http://emilcarlsson.se/assets/charlesforstman.png" alt="" />
-						<div class="meta">
-							<p class="name">Charles Forstman</p>
-							<p class="preview">Mike, this isn't over.</p>
 						</div>
 					</div>
 				</li>
@@ -67,12 +46,8 @@ class Messaging extends Component {
 	</div>
 	<div class="content">
 		<div class="contact-profile">
-			<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-			<p>Harvey Specter</p>
+			<p>Channel</p>
 			<div class="social-media">
-				<i class="fa fa-facebook" aria-hidden="true"></i>
-				<i class="fa fa-twitter" aria-hidden="true"></i>
-				 <i class="fa fa-instagram" aria-hidden="true"></i>
 			</div>
 		</div>
 		<div class="messages">
@@ -83,7 +58,7 @@ class Messaging extends Component {
 			<div class="wrap">
 			<input type="text" placeholder="Write your message..." />
 			<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-			<button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+			<button class="submit">Send</button>
 			</div>
 		</div>
 	</div>

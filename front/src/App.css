@@ -497,6 +497,10 @@ body {
   font-size: 0.85em;
   font-family: "proxima-nova",  "Source Sans Pro", sans-serif;
 }
+
+#frame .content {
+  width: 300px !important;
+}
 @media screen and (max-width: 735px) {
   #frame #sidepanel #bottom-bar button {
     float: none;
