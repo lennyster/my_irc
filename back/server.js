@@ -378,6 +378,13 @@ socket.on('edit', () => {
     //deconnection
     socket.on('disconnect', () => {
         // socket.broadcast.emit('server','SERVER : '+Users[socket.id] + ' s\'est deconnecte')
+        let lastroom;
+        for(x in socket.rooms){
+            if(x !== socket.id){
+                lastroom = x;
+            }
+        }
+        removeA(rooms[lastroom].users, Users[socket.id]);
         let msg = Users[socket.id] + ' s\'est deconnecte';
         socket.broadcast.emit('chatmessage',{from: 'server', currentchannel: null, message: msg, type: 'public'});
         console.log("Déconnexion: "+ socket.id)
