@@ -182,6 +182,8 @@ let commandes = {
             console.log(rooms);
             // socket.broadcast.to(room).emit('server','SERVER : '+Users[socket.id]+ ' vient de rejoindre le channel !');
             msg = Users[socket.id]+ ' vient de rejoindre le channel !';
+            socket.emit('chatmessage',{from: 'server', currentchannel: room, message: msg, type: 'public', lastmessages : rooms[room].messages , users : rooms[room].users});
+
             socket.broadcast.to(room).emit('chatmessage',{from: 'server', currentchannel: room, message: msg, type: 'public'});
 
 
